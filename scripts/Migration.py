@@ -18,14 +18,14 @@ def data_prep(data_path):
 
     return(data)
 
-def mongodb_creation(host = 'mongodb://localhost:27017/'):
+def mongodb_creation(host = 'mongodb://localhost:27017/', dbName = "healthcare_dataset", collectionName = "healthcare"):
     logging.info(f"Attempting to connect to MongoDB at {host}")
     try:
         client = MongoClient(host)
         logging.info("Successfully connected to MongoDB server.")
         
-        db = client["healthcare_dataset"]
-        collection = db["healthcare"]
+        db = client[dbName]
+        collection = db[collectionName]
         logging.info("Database 'healthcare_dataset' and collection 'healthcare' selected successfully.")
         
         return collection
@@ -59,22 +59,28 @@ def insert_data(data, collection):
 
 if __name__ == "__main__":
     logging.info("Script started.")
+
+    # Read MongoDB connection details from environment variables
+    mongoHost = os.getenv('MONGO_HOST', 'localhost')   # dans docker, on utilisera mongodb
+    mongoPort = os.getenv('MONGO_PORT', 27017)     
+    host = f"mongodb://{mongoHost}:{mongoPort}/"
+    dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
+    collectionName = 'healthcare'
+
     clean = True # données déjà pretes ?
-    mongoHost = 'mongodb://localhost:27017/'
 
     script_dir = os.path.dirname(os.path.abspath(__file__)) # emplacement du script
     project_root = os.path.dirname(script_dir)  # on remonte d'un niveau pour avoir la dossier du projet
-    
+    clean_data_path = os.path.join(project_root, 'data_clean', 'healthcare_dataset_clean.csv')
     if clean:
-        clean_data_path = os.path.join(project_root, 'data_clean', 'healthcare_dataset_clean.csv')
         data = pd.read_csv(clean_data_path)
     else:
         data_path = os.path.join(project_root, 'data', 'healthcare_dataset.csv')
         data = data_prep(data_path)
-        data.to_csv(os.path.join(project_root,'healthcare_dataset_clean.csv'), index=False)
+        data.to_csv(clean_data_path, index=False)
         logging.info(f"Clean data saved to {clean_data_path}")
     
-    collection = mongodb_creation(host = mongoHost)
+    collection = mongodb_creation(host = host, dbName = dbName, collectionName = collectionName)
     index_creation(collection, ["Name", "Date_of_Admission"], ["Medical_Condition", "Doctor", "Hospital"])
     insert_data(data, collection)
     logging.info("Script ended.")

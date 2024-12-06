@@ -9,9 +9,15 @@ logging.basicConfig(
 )
 
 # MongoDB connection settings
-MONGO_HOST = 'mongodb://localhost:27017/' # A modifier au passage en prod
 DATABASE_NAME = 'healthcare_dataset'
 COLLECTION_NAME = 'healthcare'
+
+# Read MongoDB connection details from environment variables
+mongoHost = os.getenv('MONGO_HOST', 'localhost')   # dans docker, on utilisera mongodb
+mongoPort = os.getenv('MONGO_PORT', 27017)     
+host = f"mongodb://{mongoHost}:{mongoPort}/"
+dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
+collectionName = 'healthcare'
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__)) # emplacement du script
@@ -62,7 +68,7 @@ if __name__ == "__main__":
             raise FileNotFoundError("Cleaned data file not found. Exiting the script.")
 
         # Connect to MongoDB
-        client = MongoClient(MONGO_HOST)
+        client = MongoClient(host)
         db = client[DATABASE_NAME]
         collection = db[COLLECTION_NAME]
 

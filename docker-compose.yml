@@ -1,0 +1,25 @@
+services:
+  app:
+    build: .
+    container_name: migration_app
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=healthcare_dataset
+    volumes:
+      - ./data:/app/data  # Bind mount the data folder to the container
+      - ./data_clean:/app/data_clean  # Bind mount the clean data folder to the container
+    depends_on:
+      - mongodb
+    command: ["python", "/app/scripts/Migration.py"]  # Run the migration script
+
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    volumes:
+      - mongodb_data:/data/db  # Named volume to persist MongoDB data
+
+volumes:
+  mongodb_data:

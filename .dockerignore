@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+notebooks/  # Exclude notebooks folder as it’s irrelevant
+tests/      # Exclude test files (can be mounted if needed)

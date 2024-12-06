@@ -1,8 +1,8 @@
 # Migration-MongoDB
-Migration données médicales vers MongoDB, Conteneurisé dans Docker
+Migration données médicales vers MongoDB, effectué en python, Conteneurisé dans Docker
 
 
-## Prérequis
+## Prérequis Python
 
 - Python 3.x installé
 - MongoDB en cours d'exécution (par défaut sur `localhost:27017`)
@@ -19,7 +19,7 @@ pip install pandas pymongo
 Pour lancer la migration et tester qu'elle fonctionne bien :
 
 Toutes les commandes qui suivent sont à lancer à la racine du projet :
-# Lancer le script :
+### Lancer le script :
 ```bash
 python scripts/migration.py
 ```
@@ -33,7 +33,7 @@ python scripts/migration.py
 2024-12-06 16:09:32,801 - INFO - Script ended.
 ```
 
-# Lancer les tests :
+### Lancer les tests :
 ```bash
 python tests/migration_test.py
 ```
@@ -42,3 +42,42 @@ python tests/migration_test.py
 2024-12-06 16:19:44,161 - INFO - Fetched 50000 documents from MongoDB.
 2024-12-06 16:19:44,629 - INFO - Verification successful: MongoDB data matches the cleaned dataset.
 ```
+
+
+## Prérequis Docker
+
+- Docker installé. Su ce n'est pas le cas : suivre [le guide d'installation Docker](https://docs.docker.com/get-docker/)
+- Docker Compose installé. Instructions [ici](https://docs.docker.com/compose/install/)
+
+## Lancer l'application avec Docker
+
+Follow these steps to run the application using Docker:
+
+### 1. Construire l'image Docker 
+
+```bash
+docker-compose build
+```
+
+### 2. Lancer les conteneurs Docker
+
+```bash
+docker-compose up
+```
+
+### 3. Vérifier la Migration
+
+Une fois que les conteneurs sont lancé, la base MongoDB deveient accessible aved un client MongoDB tel que MongoDB Compass
+La base de donné est nommée *healthcare_db*
+
+### 4. Arreter les conteneurs Docker
+```bash
+docker-compose down
+```
+
+
+# Variables d'environnement :
+
+MONGO_HOST : host utilisé, exemple : 'localhost', 'mongodb'
+MONGO_PORT : port utilisé, exemple : 27017
+MONGO_DB : nom de la db, exemple : 'healthcare_dataset'

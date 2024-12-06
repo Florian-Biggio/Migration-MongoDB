@@ -8,10 +8,6 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-# MongoDB connection settings
-DATABASE_NAME = 'healthcare_dataset'
-COLLECTION_NAME = 'healthcare'
-
 # Read MongoDB connection details from environment variables
 mongoHost = os.getenv('MONGO_HOST', 'localhost')   # dans docker, on utilisera mongodb
 mongoPort = os.getenv('MONGO_PORT', 27017)     
@@ -69,8 +65,8 @@ if __name__ == "__main__":
 
         # Connect to MongoDB
         client = MongoClient(host)
-        db = client[DATABASE_NAME]
-        collection = db[COLLECTION_NAME]
+        db = client[dbName]
+        collection = db[collectionName]
 
         # Fetch data from MongoDB
         mongodb_data = fetch_data_from_mongodb(collection)

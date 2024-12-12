@@ -38,7 +38,7 @@ python scripts/migration.py
 python tests/migration_test.py
 ```
 ```bash
-2024-12-06 16:19:43,751 - INFO - Cleaned data loaded from C:\Users\Florian\Desktop\OpenClassrooms\Projet 5\git\Migration-MongoDB\data_clean\healthcare_dataset_clean.csv with 50000 rows.
+2024-12-06 16:19:43,751 - INFO - Cleaned data loaded from Migration-MongoDB\data_clean\healthcare_dataset_clean.csv with 50000 rows.
 2024-12-06 16:19:44,161 - INFO - Fetched 50000 documents from MongoDB.
 2024-12-06 16:19:44,629 - INFO - Verification successful: MongoDB data matches the cleaned dataset.
 ```
@@ -46,7 +46,7 @@ python tests/migration_test.py
 
 ## Prérequis Docker
 
-- Docker installé. Su ce n'est pas le cas : suivre [le guide d'installation Docker](https://docs.docker.com/get-docker/)
+- Docker installé. Si ce n'est pas le cas : suivre [le guide d'installation Docker](https://docs.docker.com/get-docker/)
 - Docker Compose installé. Instructions [ici](https://docs.docker.com/compose/install/)
 
 ## Lancer l'application avec Docker
@@ -67,7 +67,7 @@ docker-compose up
 
 ### 3. Vérifier la Migration
 
-Une fois que les conteneurs sont lancé, la base MongoDB deveient accessible aved un client MongoDB tel que MongoDB Compass
+Une fois que les conteneurs sont lancé, la base MongoDB deviennent  accessible aved un client MongoDB tel que MongoDB Compass  
 La base de donné est nommée *healthcare_db*
 
 ### 4. Arreter les conteneurs Docker
@@ -78,6 +78,6 @@ docker-compose down
 
 # Variables d'environnement :
 
-MONGO_HOST : host utilisé, exemple : 'localhost', 'mongodb'
-MONGO_PORT : port utilisé, exemple : 27017
+MONGO_HOST : host utilisé, exemple : 'localhost', 'mongodb'  
+MONGO_PORT : port utilisé, exemple : 27017  
 MONGO_DB : nom de la db, exemple : 'healthcare_dataset'

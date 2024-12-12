@@ -2,21 +2,10 @@ import pandas as pd
 from pymongo import MongoClient
 import os
 import logging
+import tempfile
+import Preparation
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-def data_prep(data_path):
-    data = pd.read_csv(data_path)
-    logging.info(f"Dataset loaded with {data.shape[0]} rows and {data.shape[1]} columns.")
-    
-    data.columns = [col.strip().replace(" ", "_") for col in data.columns] # retire espace pour underscore pour une bonne syntaxe
-    data['Date_of_Admission'] = pd.to_datetime(data['Date_of_Admission'])
-    data['Discharge_Date'] = pd.to_datetime(data['Discharge_Date'])
-    
-    data = data.drop_duplicates(subset=['Name', 'Date_of_Admission'], keep='first') 
-    # On drop les dupliqués en gardant la premiere occurence, on pourrait garder que l'age le plus élevé/faible à la place
-
-    return(data)
 
 def mongodb_creation(host = 'mongodb://localhost:27017/', dbName = "healthcare_dataset", collectionName = "healthcare"):
     logging.info(f"Attempting to connect to MongoDB at {host}")
@@ -66,19 +55,21 @@ if __name__ == "__main__":
     host = f"mongodb://{mongoHost}:{mongoPort}/"
     dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
     collectionName = 'healthcare'
-
-    clean = True # données déjà pretes ?
-
     script_dir = os.path.dirname(os.path.abspath(__file__)) # emplacement du script
     project_root = os.path.dirname(script_dir)  # on remonte d'un niveau pour avoir la dossier du projet
+
+    clean = False # données déjà pretes ?
+    write = False # enregistrer les données nettoyées : deux variables pour éviter de reprocess les données en dev
     clean_data_path = os.path.join(project_root, 'data_clean', 'healthcare_dataset_clean.csv')
+
     if clean:
         data = pd.read_csv(clean_data_path)
     else:
         data_path = os.path.join(project_root, 'data', 'healthcare_dataset.csv')
-        data = data_prep(data_path)
-        data.to_csv(clean_data_path, index=False)
-        logging.info(f"Clean data saved to {clean_data_path}")
+        data = Preparation.data_prep(data_path)
+        if write:
+            data.to_csv(clean_data_path, index=False)
+            logging.info(f"Clean data saved to {clean_data_path}")
     
     collection = mongodb_creation(host = host, dbName = dbName, collectionName = collectionName)
     index_creation(collection, ["Name", "Date_of_Admission"], ["Medical_Condition", "Doctor", "Hospital"])

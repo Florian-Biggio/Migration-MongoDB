@@ -9,8 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Python scripts and data folders into the container
 COPY scripts /app/scripts
+COPY tests /app/tests
 COPY data /app/data
-COPY data_clean /app/data_clean
 
 # Set environment variables for MongoDB connection
 ENV MONGO_HOST=mongodb \
@@ -20,5 +20,5 @@ ENV MONGO_HOST=mongodb \
 # Expose the port for the application (if needed, e.g., Flask API)
 EXPOSE 5000
 
-# Command to run the Migration script when the container starts
-CMD ["python", "/app/scripts/Migration.py"]
+# Command to run the Migration script first and then run the tests if successful
+CMD ["sh", "-c", "python /app/scripts/Migration.py && pytest /app/tests/migration_test.py"]

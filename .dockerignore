@@ -3,5 +3,7 @@ __pycache__/
 *.pyo
 *.db
 *.log
-notebooks/  # Exclude notebooks folder as it’s irrelevant
-tests/      # Exclude test files (can be mounted if needed)
+
+# notebook d'exploration est inutile
+notebooks/
+    

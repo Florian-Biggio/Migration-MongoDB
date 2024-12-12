@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+
+# notebook d'exploration est inutile
+notebooks/
+    

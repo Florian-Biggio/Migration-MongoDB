@@ -1,0 +1,20 @@
+services:
+  app:
+    build: .
+    container_name: migration_app
+    volumes:
+      - ./data:/app/data  # Bind mount the data folder to the container
+      - ./tests:/app/tests
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo:4.4
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    volumes:
+      - mongodb_data:/data/db  # Named volume to persist MongoDB data
+
+volumes:
+  mongodb_data:

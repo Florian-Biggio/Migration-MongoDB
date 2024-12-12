@@ -76,7 +76,7 @@ docker-compose up
 ### 3. Vérifier la Migration
 
 Une fois que les conteneurs sont lancé, la base MongoDB deviennent  accessible aved un client MongoDB tel que MongoDB Compass  
-La base de donné est nommée *healthcare_db*
+La base de donnée est nommée *healthcare_dataset*
 
 ### 4. Arreter les conteneurs Docker
 ```bash

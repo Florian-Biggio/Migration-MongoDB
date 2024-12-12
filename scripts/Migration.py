@@ -2,7 +2,6 @@ import pandas as pd
 from pymongo import MongoClient
 import os
 import logging
-import tempfile
 import Preparation
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

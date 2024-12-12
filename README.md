@@ -24,25 +24,33 @@ Toutes les commandes qui suivent sont à lancer à la racine du projet :
 python scripts/migration.py
 ```
 ```bash
-2024-12-06 16:09:29,106 - INFO - Script started.
-2024-12-06 16:09:29,391 - INFO - Attempting to connect to MongoDB at mongodb://localhost:27017/
-2024-12-06 16:09:29,399 - INFO - Successfully connected to MongoDB server.
-2024-12-06 16:09:29,399 - INFO - Database 'healthcare_dataset' and collection 'healthcare' selected successfully.
-2024-12-06 16:09:29,494 - INFO - Indexes created for primary key ['Name', 'Date_of_Admission'] and additional fields ['Medical_Condition', 'Doctor', 'Hospital'].
-2024-12-06 16:09:32,781 - INFO - 50000 documents inserted into the collection.
-2024-12-06 16:09:32,801 - INFO - Script ended.
+2024-12-13 00:17:24,939 - INFO - Script started.
+2024-12-13 00:17:25,238 - INFO - Dataset loaded with 55500 rows and 15 columns.
+2024-12-13 00:17:25,382 - INFO - Attempting to connect to MongoDB at mongodb://localhost:27017/
+2024-12-13 00:17:25,391 - INFO - Successfully connected to MongoDB server.
+2024-12-13 00:17:25,392 - INFO - Database 'healthcare_dataset' and collection 'healthcare' selected successfully.
+2024-12-13 00:17:25,545 - INFO - Indexes created for primary key ['Name', 'Date_of_Admission'] and additional fields ['Medical_Condition', 'Doctor', 'Hospital'].
+2024-12-13 00:17:28,753 - INFO - 50000 documents inserted into the collection.
+2024-12-13 00:17:28,779 - INFO - Script ended.
 ```
 
 ### Lancer les tests :
 ```bash
-python tests/migration_test.py
+python pytest tests/ --verbose
 ```
 ```bash
-2024-12-06 16:19:43,751 - INFO - Cleaned data loaded from Migration-MongoDB\data_clean\healthcare_dataset_clean.csv with 50000 rows.
-2024-12-06 16:19:44,161 - INFO - Fetched 50000 documents from MongoDB.
-2024-12-06 16:19:44,629 - INFO - Verification successful: MongoDB data matches the cleaned dataset.
-```
+=========================================================================================================== test session starts ============================================================================================================
+platform win32 -- Python 3.12.8, pytest-8.3.3, pluggy-1.5.0 -- ...\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\python.exe
+cachedir: .pytest_cache
+rootdir: ...
+configfile: pyproject.toml
+collected 2 items
 
+tests\migration_test.py::test_mongo_connection PASSED                                                                                                                                                                                 [ 50%]
+tests\migration_test.py::test_data_integrity PASSED                                                                                                                                                                                   [100%]
+
+============================================================================================================ 2 passed in 2.78s =============================================================================================================
+```
 
 ## Prérequis Docker
 

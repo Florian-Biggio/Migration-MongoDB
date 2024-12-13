@@ -14,7 +14,7 @@ def mongodb_creation(host = 'mongodb://localhost:27017/', dbName = "healthcare_d
         
         db = client[dbName]
         collection = db[collectionName]
-        logging.info("Database 'healthcare_dataset' and collection 'healthcare' selected successfully.")
+        logging.info(f"Database '{dbName}' and collection '{collectionName}' selected successfully.")
         
         return collection
     except Exception as e:

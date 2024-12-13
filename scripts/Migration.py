@@ -16,11 +16,65 @@ def mongodb_creation(host = 'mongodb://localhost:27017/', dbName = "healthcare_d
         collection = db[collectionName]
         logging.info(f"Database '{dbName}' and collection '{collectionName}' selected successfully.")
         
-        return collection
+        return db, collection
     except Exception as e:
         logging.error("Failed to connect to MongoDB or access the database/collection.", exc_info=True)
         raise
 
+def create_roles_and_users(db):
+    logging.info("Setting up roles and users.")
+    
+    # Retrieve MongoDB user credentials from environment variables
+    admin_user = os.getenv("MONGO_ADMIN_USER", "admin_user")
+    admin_password = os.getenv("MONGO_ADMIN_PASS", "admin_password")
+    dev_user = os.getenv("MONGO_DEV_USER", "dev_user")
+    dev_password = os.getenv("MONGO_DEV_PASS", "dev_password")
+    reader_user = os.getenv("MONGO_READER_USER", "reader_user")
+    reader_password = os.getenv("MONGO_READER_PASS", "reader_password")
+
+    roles = [
+        {
+            "role": "AdminRole",
+            "privileges": [
+                {"resource": {"db": "", "collection": ""}, "actions": ["readWrite", "dbAdmin", "userAdmin"]}
+            ],
+            "roles": [],
+        },
+        {
+            "role": "DevRole",
+            "privileges": [
+                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["readWrite"]}
+            ],
+            "roles": [],
+        },
+        {
+            "role": "ReaderRole",
+            "privileges": [
+                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find"]}
+            ],
+            "roles": [],
+        },
+    ]
+
+    for role in roles:
+        try:
+            db.command("createRole", role["role"], privileges=role["privileges"], roles=role["roles"])
+            logging.info(f"Role '{role['role']}' created successfully.")
+        except Exception as e:
+            logging.warning(f"Role '{role['role']}' already exists or could not be created: {e}")
+    
+    users = [
+        {"user": admin_user, "pwd": admin_password, "roles": [{"role": "AdminRole", "db": "admin"}]},
+        {"user": dev_user, "pwd": dev_password, "roles": [{"role": "DevRole", "db": "healthcare_dataset"}]},
+        {"user": reader_user, "pwd": reader_password, "roles": [{"role": "ReaderRole", "db": "healthcare_dataset"}]},
+    ]
+
+    for user in users:
+        try:
+            db.command("createUser", user["user"], pwd=user["pwd"], roles=user["roles"])
+            logging.info(f"User '{user['user']}' created successfully.")
+        except Exception as e:
+            logging.warning(f"User '{user['user']}' already exists or could not be created: {e}")
 
 def index_creation(collection, 
                    primary_key = ["Name", "Date_of_Admission"], 
@@ -49,9 +103,12 @@ if __name__ == "__main__":
     logging.info("Script started.")
 
     # Read MongoDB connection details from environment variables
-    mongoHost = os.getenv('MONGO_HOST', 'localhost')   # dans docker, on utilisera mongodb
-    mongoPort = os.getenv('MONGO_PORT', 27017)     
-    host = f"mongodb://{mongoHost}:{mongoPort}/"
+    mongoHost = os.getenv('MONGO_HOST', 'localhost')
+    mongoPort = os.getenv('MONGO_PORT', 27017)
+    mongoRootUser = os.getenv('MONGO_INITDB_ROOT_USERNAME', 'admin')
+    mongoRootPass = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'password')
+    host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
+
     dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
     collectionName = 'healthcare'
     script_dir = os.path.dirname(os.path.abspath(__file__)) # emplacement du script
@@ -70,7 +127,8 @@ if __name__ == "__main__":
             data.to_csv(clean_data_path, index=False)
             logging.info(f"Clean data saved to {clean_data_path}")
     
-    collection = mongodb_creation(host = host, dbName = dbName, collectionName = collectionName)
+    db, collection = mongodb_creation(host = host, dbName = dbName, collectionName = collectionName)
+    create_roles_and_users(db)
     index_creation(collection, ["Name", "Date_of_Admission"], ["Medical_Condition", "Doctor", "Hospital"])
     insert_data(data, collection)
     logging.info("Script ended.")

@@ -10,6 +10,8 @@ graph TD;
     F --> G[Rôles Utilisateurs]
 
 
+#todo ajout shema d'archi migration Mongodb
+
 
 ## Prérequis Python
 

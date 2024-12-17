@@ -24,6 +24,11 @@ def mongodb_creation(host = 'mongodb://localhost:27017/', dbName = "healthcare_d
 def create_roles_and_users(db):
     logging.info("Setting up roles and users.")
     
+    try:
+        pass #tester la connection
+    except:
+        pass
+
     # Retrieve MongoDB user credentials from environment variables
     admin_user = os.getenv("MONGO_ADMIN_USER", "admin_user")
     admin_password = os.getenv("MONGO_ADMIN_PASS", "admin_password")
@@ -36,14 +41,14 @@ def create_roles_and_users(db):
         {
             "role": "AdminRole",
             "privileges": [
-                {"resource": {"db": "", "collection": ""}, "actions": ["readWrite", "dbAdmin", "userAdmin"]}
+                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find", "insert", "update", "remove", "createCollection"]}
             ],
             "roles": [],
         },
         {
             "role": "DevRole",
             "privileges": [
-                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["readWrite"]}
+                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["insert", "update", "remove"]}
             ],
             "roles": [],
         },
@@ -107,7 +112,9 @@ if __name__ == "__main__":
     mongoPort = os.getenv('MONGO_PORT', 27017)
     mongoRootUser = os.getenv('MONGO_INITDB_ROOT_USERNAME', 'admin')
     mongoRootPass = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'password')
-    host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
+    #host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
+    host = f"mongodb://{mongoHost}:{mongoPort}/"
+
 
     dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
     collectionName = 'healthcare'

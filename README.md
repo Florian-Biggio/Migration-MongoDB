@@ -1,16 +1,7 @@
 # Migration-MongoDB
 Migration données médicales vers MongoDB, effectué en python, Conteneurisé dans Docker
-```mermaid
-graph TD;
-    A[Fichier data.csv] --> B[Script Python de Migration]
-    B --> C[Docker]
-    C --> D[MongoDB]
-    D --> E[AWS DocumentDB]
-    C --> F[Authentification]
-    F --> G[Rôles Utilisateurs]
 
-
-#todo ajout shema d'archi migration Mongodb
+![MongoDB Migration Diagram](./images/Migr_MongoDB.png)
 
 
 ## Prérequis Python
@@ -113,9 +104,9 @@ MONGO_READER_PASS=reader_password
 ```
 
 # Explication des roles :
-admin : role administrateur
-dev : role lecture écriture
-user : role lecture
+AdminRole : role administrateur  
+DevRole : role lecture écriture  
+ReaderRole : role lecture  
 
 # Problème possible :
 Si Mongo est déjà en route, il peut rentrer en conflit avec docker, dans ce cas,lancer 

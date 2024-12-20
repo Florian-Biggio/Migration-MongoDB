@@ -114,3 +114,17 @@ Si Mongo est déjà en route, il peut rentrer en conflit avec docker, dans ce ca
 net stop MongoDB
 ```
 pour arreter Mongo avant de lancer docker
+
+
+# For testing purposes
+
+To reset everything, do
+```bash
+docker-compose down --volumes
+docker volume prune
+docker rmi -f mongo
+```
+And then restart with
+```bash
+docker-compose up -d
+```

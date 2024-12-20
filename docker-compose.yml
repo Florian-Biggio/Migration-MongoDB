@@ -13,12 +13,17 @@ services:
   mongodb:
     image: mongo:4.4
     container_name: mongodb
+    command:
+      - --auth
     ports:
       - "27017:27017"  # Expose MongoDB port
     volumes:
       - mongodb_data:/data/db  # Named volume to persist MongoDB data
     env_file: 
       - .env  # Reference the .env file for environment variables
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
 
 volumes:
   mongodb_data:

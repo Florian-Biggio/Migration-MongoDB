@@ -38,27 +38,41 @@ def create_roles_and_users(db):
     reader_password = os.getenv("MONGO_READER_PASS", "reader_password")
 
     roles = [
-        {
-            "role": "AdminRole",
-            "privileges": [
-                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find", "insert", "update", "remove", "createCollection"]}
-            ],
-            "roles": [],
-        },
+            {
+        "role": "AdminRole",
+        "privileges": [
+            {
+                "resource": {"db": "healthcare_dataset", "collection": ""},
+                "actions": [
+                    "find", "insert", "update", "remove", 
+                    "createCollection", "dropCollection", 
+                    "collMod", "createIndex", "dropIndex", 
+                    "listIndexes", "killCursors"
+                ]
+            }
+        ],
+        "roles": [
+            { "role": "dbAdmin", "db": "healthcare_dataset" },
+            { "role": "userAdmin", "db": "healthcare_dataset" },
+            { "role": "readWrite", "db": "healthcare_dataset" }
+        ]
+    },
+
         {
             "role": "DevRole",
             "privileges": [
-                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["insert", "update", "remove"]}
+                {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find", "insert", "update", "remove"]}
             ],
-            "roles": [],
+            "roles": [{"role": "readWrite", "db": "healthcare_dataset"}],
         },
         {
             "role": "ReaderRole",
             "privileges": [
                 {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find"]}
             ],
-            "roles": [],
+            "roles": [{"role": "read", "db": "healthcare_dataset"}],
         },
+
     ]
 
     for role in roles:
@@ -69,7 +83,7 @@ def create_roles_and_users(db):
             logging.warning(f"Role '{role['role']}' already exists or could not be created: {e}")
     
     users = [
-        {"user": admin_user, "pwd": admin_password, "roles": [{"role": "AdminRole", "db": "admin"}]},
+        {"user": admin_user, "pwd": admin_password, "roles": [{"role": "AdminRole", "db": "healthcare_dataset"}]},
         {"user": dev_user, "pwd": dev_password, "roles": [{"role": "DevRole", "db": "healthcare_dataset"}]},
         {"user": reader_user, "pwd": reader_password, "roles": [{"role": "ReaderRole", "db": "healthcare_dataset"}]},
     ]
@@ -111,9 +125,9 @@ if __name__ == "__main__":
     mongoHost = os.getenv('MONGO_HOST', 'localhost')
     mongoPort = os.getenv('MONGO_PORT', 27017)
     mongoRootUser = os.getenv('MONGO_INITDB_ROOT_USERNAME', 'admin')
-    mongoRootPass = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'password')
-    #host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
-    host = f"mongodb://{mongoHost}:{mongoPort}/"
+    mongoRootPass = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'secretpassword')
+    host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
+    #host = f"mongodb://{mongoHost}:{mongoPort}/"
 
 
     dbName = os.getenv('MONGO_DB', 'healthcare_dataset')

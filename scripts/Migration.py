@@ -53,7 +53,7 @@ def create_roles_and_users(db):
         ],
         "roles": [
             { "role": "dbAdmin", "db": "healthcare_dataset" },
-            { "role": "userAdmin", "db": "healthcare_dataset" },
+            # { "role": "userAdmin", "db": "healthcare_dataset" }, #we want an admin, not a root
             { "role": "readWrite", "db": "healthcare_dataset" }
         ]
     },
@@ -63,7 +63,8 @@ def create_roles_and_users(db):
             "privileges": [
                 {"resource": {"db": "healthcare_dataset", "collection": ""}, "actions": ["find", "insert", "update", "remove"]}
             ],
-            "roles": [{"role": "readWrite", "db": "healthcare_dataset"}],
+            "roles": [],
+            #"roles": [{ "role": "readWrite", "db": "healthcare_dataset"}], #allows to drop collection
         },
         {
             "role": "ReaderRole",

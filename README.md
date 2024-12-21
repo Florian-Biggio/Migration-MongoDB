@@ -88,6 +88,8 @@ docker-compose down
 
 # Variables d'environnement :
 Présentes dans un fichier à créer à la racine .env :
+
+Voici un exemple possible :
 ```python
 # MongoDB connection details
 MONGO_HOST=mongodb
@@ -95,6 +97,8 @@ MONGO_PORT=27017
 MONGO_DB=healthcare_dataset
 
 # MongoDB user credentials
+MONGO_INITDB_ROOT_USERNAME=admin
+MONGO_INITDB_ROOT_PASSWORD=secretpassword
 MONGO_ADMIN_USER=admin_user
 MONGO_ADMIN_PASS=admin_password
 MONGO_DEV_USER=dev_user

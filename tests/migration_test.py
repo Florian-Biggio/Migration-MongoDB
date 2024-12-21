@@ -13,7 +13,9 @@ logging.basicConfig(
 # Read MongoDB connection details from environment variables
 mongoHost = os.getenv('MONGO_HOST', 'localhost')
 mongoPort = os.getenv('MONGO_PORT', 27017)
-host = f"mongodb://{mongoHost}:{mongoPort}/"
+mongoRootUser = os.getenv('MONGO_INITDB_ROOT_USERNAME', 'admin')
+mongoRootPass = os.getenv('MONGO_INITDB_ROOT_PASSWORD', 'secretpassword')
+host = f"mongodb://{mongoRootUser}:{mongoRootPass}@{mongoHost}:{mongoPort}/"
 dbName = os.getenv('MONGO_DB', 'healthcare_dataset')
 collectionName = 'healthcare'
 

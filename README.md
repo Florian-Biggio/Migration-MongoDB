@@ -1,6 +1,8 @@
 # Migration-MongoDB
 Migration données médicales vers MongoDB, effectué en python, Conteneurisé dans Docker
 
+![MongoDB Migration Diagram](./images/Migr_MongoDB.png)
+
 
 ## Prérequis Python
 
@@ -75,7 +77,7 @@ docker-compose up
 
 ### 3. Vérifier la Migration
 
-Une fois que les conteneurs sont lancé, la base MongoDB deviennent  accessible aved un client MongoDB tel que MongoDB Compass  
+Une fois que les conteneurs sont lancés, la base MongoDB deviennent accessible avec un client MongoDB tel que MongoDB Compass  
 La base de donnée est nommée *healthcare_dataset*
 
 ### 4. Arreter les conteneurs Docker
@@ -85,7 +87,48 @@ docker-compose down
 
 
 # Variables d'environnement :
+Présentes dans un fichier à créer à la racine .env :
 
-MONGO_HOST : host utilisé, exemple : 'localhost', 'mongodb'  
-MONGO_PORT : port utilisé, exemple : 27017  
-MONGO_DB : nom de la db, exemple : 'healthcare_dataset'
+Voici un exemple possible :
+```python
+# MongoDB connection details
+MONGO_HOST=mongodb
+MONGO_PORT=27017
+MONGO_DB=healthcare_dataset
+
+# MongoDB user credentials
+MONGO_INITDB_ROOT_USERNAME=admin
+MONGO_INITDB_ROOT_PASSWORD=secretpassword
+MONGO_ADMIN_USER=admin_user
+MONGO_ADMIN_PASS=admin_password
+MONGO_DEV_USER=dev_user
+MONGO_DEV_PASS=dev_password
+MONGO_READER_USER=reader_user
+MONGO_READER_PASS=reader_password
+```
+
+# Explication des roles :
+AdminRole : role administrateur  
+DevRole : role lecture écriture  
+ReaderRole : role lecture  
+
+# Problème possible :
+Si Mongo est déjà en route, il peut rentrer en conflit avec docker, dans ce cas,lancer 
+```bash
+net stop MongoDB
+```
+pour arreter Mongo avant de lancer docker
+
+
+# For testing purposes
+
+To reset everything, do
+```bash
+docker-compose down --volumes
+docker volume prune
+docker rmi -f mongo
+```
+And then restart with
+```bash
+docker-compose up -d
+```

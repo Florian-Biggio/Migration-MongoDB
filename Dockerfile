@@ -12,11 +12,6 @@ COPY scripts /app/scripts
 COPY tests /app/tests
 COPY data /app/data
 
-# Set environment variables for MongoDB connection
-ENV MONGO_HOST=mongodb \
-    MONGO_PORT=27017 \
-    MONGO_DB=healthcare_db
-
 # Expose the port for the application (if needed, e.g., Flask API)
 EXPOSE 5000
 

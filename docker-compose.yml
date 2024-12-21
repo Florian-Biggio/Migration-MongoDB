@@ -5,16 +5,29 @@ services:
     volumes:
       - ./data:/app/data  # Bind mount the data folder to the container
       - ./tests:/app/tests
+    env_file: 
+      - .env  # Reference the .env file for environment variables  
     depends_on:
       - mongodb
 
   mongodb:
     image: mongo:4.4
     container_name: mongodb
+    command:
+      - --auth
     ports:
       - "27017:27017"  # Expose MongoDB port
     volumes:
       - mongodb_data:/data/db  # Named volume to persist MongoDB data
+    env_file: 
+      - .env  # Reference the .env file for environment variables
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
 
 volumes:
   mongodb_data:
+
+networks:
+  migration_network: 
+    driver: bridge  # Par défaut, pour créer un réseau local

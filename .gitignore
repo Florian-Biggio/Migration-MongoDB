@@ -1,0 +1,4 @@
+# Ignore the .env file
+.env
+tests/__pycache__
+tests/__init__.py
